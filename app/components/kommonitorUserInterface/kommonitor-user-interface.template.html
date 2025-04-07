@@ -185,10 +185,10 @@
         <kommonitor-reachability></kommonitor-reachability>
     </aside>
 
-		<!-- hide processing button and menu, as it must be greatly improved -->
-		<!-- <aside id="sidebarProcessing" ng-class="sidebarProcessingClass" ng-if="$ctrl.kommonitorElementVisibilityHelperServiceInstance.elementVisibility.processing">
-        <kommonitor-individual-indicator-computation></kommonitor-individual-indicator-computation>
-    </aside> -->
+		<!-- New Toast Demo Sidebar -->
+		<aside id="sidebarToastDemo" ng-class="sidebarToastDemoClass">
+        <app-toast-demo></app-toast-demo>
+    </aside>
 
 	<!-- right side legend menu -->
 	<aside id="sidebarLegend" ng-class="sidebarLegendClass" >
@@ -261,11 +261,11 @@
 								<!-- <span style="font-size:2.5vh;" class="glyphicon glyphicon-wrench" aria-hidden="true"></span> -->
 						</button>
 
-						<!-- hide processing button and menu, as it must be greatly improved -->
-						<!-- <button type="button" style="display: block; position: relative; margin-top: 5px;" " id="sidebarProcessingCollapse"
-							ng-click="onSidebarProcessingClick()" ng-class="buttonProcessingClass" ng-if="$ctrl.kommonitorElementVisibilityHelperServiceInstance.elementVisibility.processing" data-toggle="tooltip" title="Individuelle Indikatorenberechnung">
-							<i style="font-size:2.5vh;" class="fas fa-sliders-h"></i>
-						</button> -->
+						<!-- New Toast Demo Button -->
+						<button type="button" style="display: block; position: relative; margin-top: 5px;" id="sidebarToastDemoCollapse"
+							ng-click="onSidebarToastDemoClick()" ng-class="buttonToastDemoClass" data-toggle="tooltip" title="Toast Demo">
+							<i style="font-size:2.5vh;" class="fas fa-bell"></i>
+						</button>
 
 				</div>
 
