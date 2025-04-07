@@ -1,0 +1,17 @@
+<div class="toast-demo-container">
+  <h3>Toast Demo</h3>
+  <div class="form-group">
+    <label for="toastTitle">Title:</label>
+    <input type="text" id="toastTitle" class="form-control" [(ngModel)]="title">
+  </div>
+  <div class="form-group">
+    <label for="toastMessage">Message:</label>
+    <textarea id="toastMessage" class="form-control" [(ngModel)]="message" rows="3"></textarea>
+  </div>
+  <div class="button-group">
+    <button class="btn btn-success" (click)="showSuccessToast()">Show Success Toast</button>
+    <button class="btn btn-info" (click)="showInfoToast()">Show Info Toast</button>
+    <button class="btn btn-warning" (click)="showWarningToast()">Show Warning Toast</button>
+    <button class="btn btn-danger" (click)="showErrorToast()">Show Error Toast</button>
+  </div>
+</div>
