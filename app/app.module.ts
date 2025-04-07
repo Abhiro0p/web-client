@@ -1,4 +1,3 @@
-
 import { DoBootstrap, NgModule, Version, inject, Input, Inject } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { UpgradeModule } from '@angular/upgrade/static';
@@ -31,7 +30,8 @@ import { NgbCalendar, NgbDatepickerModule, NgbDateStruct, NgbAccordionModule, Ng
 import { FormsModule } from '@angular/forms';
 import { JsonPipe } from '@angular/common';
 import { KommonitorClassificationComponent } from './components/ngComponents/userInterface/kommonitorClassification/kommonitor-classification.component';
-
+import { ToastHelperService } from './services/toast-helper/toast-helper.service';
+import { ToastDemoComponent } from './components/toast-demo/toast-demo.component';
 
 // currently the AngularJS routing is still used as part of kommonitorClient module
 const routes: Routes = [];
@@ -57,12 +57,14 @@ declare var MathJax;
     ajskommonitorDiagramHelperServiceProvider,ajskommonitorFilterHelperServiceProvider,
     ajskommonitorElementVisibilityHelperServiceProvider, ajskommonitorShareHelperServiceProvider,
     ajskommonitorVisualStyleHelperServiceProvider,
-    NgbModule
+    NgbModule,
+    ToastHelperService
   ],
   declarations: [
     InfoModalComponent,
     KommonitorLegendComponent,
-    KommonitorClassificationComponent
+    KommonitorClassificationComponent,
+    ToastDemoComponent
   ]
 })
 
@@ -111,9 +113,9 @@ export class AppModule implements DoBootstrap {
     angular.module('kommonitorUserInterface')
     .directive('kommonitorLegendNew',  downgradeComponent({ component: KommonitorLegendComponent }) as angular.IDirectiveFactory);
 
-   /*  angular.module('kommonitorUserInterface')
-    .directive('versionInfo',  downgradeComponent({ component: VersionInfoComponent }) as angular.IDirectiveFactory);
- */
+    angular.module('kommonitorUserInterface')
+    .directive('appToastDemo',  downgradeComponent({ component: ToastDemoComponent }) as angular.IDirectiveFactory);
+
     console.log("registered downgraded Angular components for AngularJS usage");
   }
 
@@ -123,16 +125,13 @@ export class AppModule implements DoBootstrap {
       window.alert('Internet Explorer erkannt. Für eine optimale Nutzung von KomMonitor nutzen Sie nach Möglichkeit die Browser Firefox oder Chrome.');
     }
 
-
     if (/Edge\/\d./i.test(navigator.userAgent)) {
       // This is Microsoft Edge
-
       window.alert('Microsoft Edge erkannt. Für eine optimale Nutzung von KomMonitor nutzen Sie nach Möglichkeit die Browser Firefox oder Chrome.');
     }
   }
 
   private async loadConfigs(): Promise<any> {
-
     console.log("start loading required config files");
 
     let self = this;
@@ -150,7 +149,6 @@ export class AppModule implements DoBootstrap {
       await self.ajaxCall_configServerFile();
       // error
     });
-
   };
 
   /*
@@ -232,7 +230,6 @@ export class AppModule implements DoBootstrap {
     });
   }
 
-
   private loadAppConfigScriptDynamically(scriptUrl: string): Promise<unknown> {
     return new Promise(function (res, rej) {
       let script = document.createElement('script');
@@ -258,7 +255,6 @@ export class AppModule implements DoBootstrap {
         window.console.log = function () { };
       }
     }
-
   }
 
   private ajaxCall_configServerFile(): JQuery.jqXHR<any> {
@@ -277,7 +273,6 @@ export class AppModule implements DoBootstrap {
             console.log("Error while loading app config from client config storage server. Will use defaults instead");
             alert("Error while loading app config from client config storage server. Will use defaults instead.");
           });
-
 
         return $.when(self.ajaxCall_keycloakConfig(window.__env.configStorageServerConfig), self.ajaxCall_controlsConfig(window.__env.configStorageServerConfig), self.ajaxCall_appConfig(window.__env.configStorageServerConfig)).then(function (ajax1Results, ajax2Results, ajax3Results) {
           console.log("all configs have been loaded");
@@ -331,7 +326,6 @@ export class AppModule implements DoBootstrap {
             var output :string[] = [],
                 keys :string[] = [];
             var splitKeys = primaryKey.split('.'); //split by period
-
 
             angular.forEach(collection, function (item: string) {
                 let key :string = "";
@@ -410,7 +404,6 @@ export class AppModule implements DoBootstrap {
                       });
                     }
                   }
-
                 }
               }
             })
@@ -444,7 +437,6 @@ export class AppModule implements DoBootstrap {
     angular.module('kommonitorClient').config(['$httpProvider', function ($httpProvider) {
       $httpProvider.interceptors.push('authInterceptor');
     }]);
-
   }
 
   private urlRequiresKeycloakAuthHeader(url: String): boolean {
@@ -468,8 +460,6 @@ export class AppModule implements DoBootstrap {
     return true;
   };
 
-
-
   private isBase64(str: string): boolean {
     var notBase64 = /[^A-Z0-9+\/=]/i;
 
@@ -481,47 +471,9 @@ export class AppModule implements DoBootstrap {
     return firstPaddingChar === -1 ||
       firstPaddingChar === len - 1 ||
       (firstPaddingChar === len - 2 && str[len - 1] === '=');
-
   };
 
-  // private decryptAesCBC(encryptedString: string) {
-
-  //   var hashedKey = CryptoJS.SHA256(this.env.encryption.password);
-
-  //   // from BASE64 encoded encrypted string
-  //   var encryptedWordArray = CryptoJS.enc.Base64.parse(encryptedString);
-
-  //   // get IV from beginning
-  //   var iv = CryptoJS.lib.WordArray.create(
-  //     encryptedWordArray.words.slice(0, (this.env.encryption.ivLength_byte) / 4)
-  //   );
-
-  //   var decrypted = CryptoJS.AES.decrypt(
-  //     {
-  //       ciphertext: CryptoJS.lib.WordArray.create(
-  //         encryptedWordArray.words.slice(this.env.encryption.ivLength_byte / 4)
-  //       )
-  //     },
-  //     hashedKey,
-  //     { iv: iv }
-  //   );
-
-  //   var decryptedString = decrypted.toString(CryptoJS.enc.Utf8);
-
-  //   var decryptedJson = JSON.parse(decryptedString);
-
-  //   // sometimes a response might still be BASE64 encoded in addition
-  //   // if so, then resolve that
-  //   if (typeof decryptedJson === 'string' && this.isBase64(decryptedJson)) {
-  //     decryptedJson = CryptoJS.enc.Base64.parse(decryptedJson).toString(CryptoJS.enc.Utf8);
-  //     decryptedJson = JSON.parse(decryptedJson);
-  //   }
-
-  //   return decryptedJson;
-  // };
-
   private async initKeycloak(): Promise<any> {
-
     let auth = {
       keycloak: {}
     };
@@ -555,5 +507,4 @@ export class AppModule implements DoBootstrap {
       });
     }
   }
-
 }
